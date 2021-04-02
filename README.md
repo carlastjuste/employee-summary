@@ -13,6 +13,7 @@ The following demonstrates the application functionality:
 
 ## unit test
 
+run npm test should give the following result
 ![run npm test should give the following result](Assets/test_result.PNG)
 
 ## Author
