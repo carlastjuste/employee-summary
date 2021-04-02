@@ -10,30 +10,42 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+inquirer.registerPrompt("loop", require("inquirer-loop")(inquirer));
+
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 console.log("---------------EMPLOYEE SUMMARY APP---------------");
 console.log("Please answer the following questions to build your team."); 
 
-// array of questions for user
-const questions = [
+
+const builtTeam = async (employees = []) => {
+  const prompts = [
     {
         type:'input',
-        name:'managerName',
-        message:'What\'s the team manager\'s?'
+        name:'name',
+        message:'What\'s the team member\'s name?'
        
     },
     {
         type: 'input',
-        name:'managerId',
-        message: 'What\'s the manager\'s id?'
+        name:'id',
+        message: 'What\'s the team member\'s id?'
     },
     {
         type: 'input',
-        name:'managerEmail',
-        message: 'What\'s the manager\'s email address?'
+        name:'email',
+        message: 'What\'s the team member\'s email address?'
     },
+    {
+        type: 'list',
+        name: 'role',
+        message: 'What\'s the team member\'s role?',
+        choices: ['Manager', 'Engineer', 'Intern']
+    }
+  ];
+
+  const managerPrompt = [   
     {
         type: 'input',
         name:'officeNumber',
@@ -41,21 +53,69 @@ const questions = [
     }
 ];
 
-init();
+  const engineerPrompt = [   
+        {
+            type: 'input',
+            name:'github',
+            message: 'What\'s the engineer\'s GitHub username?'
+        }
+];
 
-// function to initialize program
-function init() {
-    inquirer.prompt(questions)
-    .then(answers => {
-        console.log('GENERATE HTML PAGE...');
-        console.log(answers);
-        let manager = new Manager(answers.managerName, answers.managerId, answers.managerEmail, answers.officeNumber);
-        console.log(manager.getName());
-    });
+   const internPrompt = [   
+    {
+        type: 'input',
+        name:'school',
+        message: 'What\'s the intern\'s school?'
+    }
+];
 
-    console.log(manager.getEmail());
+    const repeat = [
+            {
+                type: 'confirm',
+                name: 'addMember',
+                message: 'Enter another team member? ',
+                default: true
+              }
+    ];
+
+  const employee = await inquirer.prompt(prompts);
+  const role = employee.role;
+
+  switch (role) {
+      case 'Manager':
+        const {officeNumber} = await inquirer.prompt(managerPrompt);
+        employee.officeNumber = officeNumber;
+        employees.push(employee);
+        break;
+
+      case 'Engineer':
+        const {github} = await inquirer.prompt(engineerPrompt);
+        employee.github = github;
+        employees.push(employee);
+        break;
+
+      case 'Intern':
+        const {school} = await inquirer.prompt(internPrompt);
+        employee.school = school;
+        employees.push(employee);
+        break;
+
+      default:
+        break;
+  };
+
+  const {addMember} = await inquirer.prompt(repeat);
+  return addMember ? builtTeam(employees) : employees;
 
 };
+
+const launch = async () => {
+    const employees = await builtTeam();
+    console.log(employees);
+  };
+  
+  launch();
+
 
 
 
