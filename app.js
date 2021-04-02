@@ -85,20 +85,23 @@ const builtTeam = async (employees = []) => {
   switch (role) {
       case 'Manager':
         const {officeNumber} = await inquirer.prompt(managerPrompt);
-        employee.officeNumber = officeNumber;
-        employees.push(employee);
+        const manager = new Manager(employee.name, employee.id, employee.email, officeNumber);
+        //employee.officeNumber = officeNumber;
+        employees.push(manager);
         break;
 
       case 'Engineer':
         const {github} = await inquirer.prompt(engineerPrompt);
-        employee.github = github;
-        employees.push(employee);
+        const engineer = new Engineer(employee.name, employee.id, employee.email, github);
+        //employee.github = github;
+        employees.push(engineer);
         break;
 
       case 'Intern':
         const {school} = await inquirer.prompt(internPrompt);
-        employee.school = school;
-        employees.push(employee);
+        const intern = new Intern(employee.name, employee.id, employee.email, school);
+        //employee.school = school;
+        employees.push(intern);
         break;
 
       default:
