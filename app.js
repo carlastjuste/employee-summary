@@ -13,11 +13,12 @@ const render = require("./lib/htmlRenderer");
 inquirer.registerPrompt("loop", require("inquirer-loop")(inquirer));
 
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
 console.log("---------------EMPLOYEE SUMMARY APP---------------");
 console.log("Please answer the following questions to build your team."); 
 
+
+// Write code to use inquirer to gather information about the development team members,
+// and to create objects for each team member (using the correct classes as blueprints!)
 
 const builtTeam = async (employees = []) => {
   const prompts = [
@@ -112,7 +113,10 @@ const builtTeam = async (employees = []) => {
 const launch = async () => {
     const employees = await builtTeam();
     console.log(employees);
-  };
+    const renderHTML = render(employees);
+    fs.writeFileSync(outputPath, renderHTML, function(err) {if (err) return console.log(err);});
+
+};
   
   launch();
 
